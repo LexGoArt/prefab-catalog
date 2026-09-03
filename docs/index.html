@@ -1,0 +1,617 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Заводы сборных домов</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F8FAFC; --surface:#FFFFFF; --soft:#F1F5F9; --tint:#EFF6FF;
+  --text:#0F172A; --text-2:#475569; --muted:#64748B;
+  --border:#E2E8F0; --border-2:#CBD5E1;
+  --primary:#2563EB; --primary-dark:#1D4ED8; --amber:#B45309; --amber-bg:#FEF3C7;
+  --shadow:0 1px 2px rgba(15,23,42,.06), 0 1px 3px rgba(15,23,42,.04);
+  --shadow-lg:0 10px 30px -10px rgba(15,23,42,.18);
+  --font:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);
+  font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1280px;margin:0 auto;padding:0 24px}
+h1,h2,h3{text-wrap:balance;margin:0}
+.num{font-variant-numeric:tabular-nums}
+:focus-visible{outline:3px solid rgba(37,99,235,.45);outline-offset:2px;border-radius:8px}
+
+/* ---- hero ---- */
+header{padding:56px 0 4px}
+.kicker{font-size:13px;font-weight:600;letter-spacing:.02em;color:var(--primary);margin-bottom:14px}
+h1{font-size:clamp(32px,4.4vw,46px);line-height:1.12;font-weight:700;letter-spacing:-.02em;max-width:16ch}
+.lead{margin-top:16px;font-size:18px;color:var(--text-2);max-width:60ch}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:36px}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px 22px;box-shadow:var(--shadow)}
+.stat .v{font-size:32px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1.1}
+.stat .k{margin-top:6px;font-size:14px;color:var(--muted)}
+
+/* ---- callout ---- */
+.callout{margin-top:32px;background:var(--surface);border:1px solid var(--border);border-left:5px solid var(--amber);
+  border-radius:16px;padding:26px 28px;box-shadow:var(--shadow)}
+.callout .badge{display:inline-block;background:var(--amber-bg);color:var(--amber);font-size:12px;font-weight:700;
+  letter-spacing:.03em;text-transform:uppercase;padding:4px 10px;border-radius:999px;margin-bottom:12px}
+.callout h2{font-size:24px;font-weight:700;letter-spacing:-.01em}
+.callout p{margin:10px 0 0;color:var(--text-2);font-size:16.5px;max-width:74ch}
+.callout b{color:var(--text);font-weight:600}
+
+/* ---- collapsibles ---- */
+details{background:var(--surface);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);
+  margin-top:16px;overflow:hidden}
+details>summary{list-style:none;cursor:pointer;padding:20px 24px;font-size:17px;font-weight:600;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;transition:background .15s}
+details>summary::-webkit-details-marker{display:none}
+details>summary:hover{background:var(--soft)}
+details>summary .hint{font-size:14px;font-weight:400;color:var(--muted)}
+details>summary .chev{flex:none;width:30px;height:30px;border-radius:999px;background:var(--soft);color:var(--text-2);
+  display:grid;place-items:center;transition:transform .2s}
+details>summary .chev svg{width:17px;height:17px;display:block}
+details[open]>summary .chev{transform:rotate(180deg)}
+.dbody{padding:4px 24px 26px;border-top:1px solid var(--border)}
+
+/* ---- findings inside details ---- */
+.flist{display:grid;gap:22px;padding-top:22px}
+.fitem h3{font-size:16.5px;font-weight:600;margin-bottom:5px}
+.fitem p{margin:0;color:var(--text-2);font-size:15.5px}
+.fitem b{color:var(--text);font-weight:600}
+
+/* ---- section ---- */
+section{padding:40px 0 0}
+.sec-title{font-size:26px;font-weight:700;letter-spacing:-.015em}
+.sec-sub{margin-top:8px;color:var(--text-2);font-size:16px;max-width:70ch}
+
+/* ---- filters ---- */
+.filters{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px;align-items:center;min-height:42px}
+.chip{font-family:inherit;font-size:15px;font-weight:500;color:var(--text-2);background:var(--surface);
+  border:1px solid var(--border-2);border-radius:999px;padding:9px 18px;cursor:pointer;
+  transition:all .15s;min-height:42px}
+.chip:hover{border-color:var(--primary);color:var(--primary)}
+.chip[aria-pressed="true"]{background:var(--primary);border-color:var(--primary);color:#fff}
+.count{margin-left:auto;font-size:15px;color:var(--muted)}
+
+/* ---- tiles ---- */
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;margin-top:24px;min-height:1420px}
+.card{appearance:none;text-align:left;font:inherit;color:inherit;padding:0;
+  background:var(--surface);border:1px solid var(--border);border-radius:18px;overflow:hidden;
+  display:flex;flex-direction:column;box-shadow:var(--shadow);cursor:pointer;
+  transition:box-shadow .22s, transform .22s, border-color .22s}
+.card:hover{box-shadow:var(--shadow-lg);transform:translateY(-3px);border-color:var(--border-2)}
+.card:hover .more{color:var(--primary-dark)}
+.card img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;background:var(--soft)}
+.card .pad{padding:16px 18px 14px;display:flex;flex-direction:column;flex:1}
+.tag{align-self:flex-start;font-size:12px;font-weight:600;color:var(--primary);background:var(--tint);
+  border-radius:999px;padding:4px 10px}
+.card h3{font-size:19px;font-weight:700;letter-spacing:-.015em;margin-top:10px;line-height:1.2}
+.city{margin-top:3px;font-size:13.5px;color:var(--muted)}
+.card .money{margin-top:14px;font-size:21px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.card .money.ask{font-size:16px;font-weight:600;color:var(--text-2)}
+.card .money small{display:block;font-size:12.5px;font-weight:400;color:var(--muted);margin-top:3px;letter-spacing:0}
+.more{margin-top:auto;padding-top:14px;font-size:14px;font-weight:600;color:var(--primary);
+  display:flex;align-items:center;gap:6px;transition:color .15s}
+
+/* ---- modal ---- */
+.scrim{position:fixed;inset:0;background:rgba(15,23,42,.55);backdrop-filter:blur(3px);
+  display:flex;align-items:flex-start;justify-content:center;padding:40px 20px;overflow-y:auto;z-index:50}
+.scrim[hidden]{display:none}
+.modal{background:var(--surface);border-radius:22px;max-width:900px;width:100%;overflow:hidden;
+  box-shadow:0 30px 70px -20px rgba(15,23,42,.5);position:relative}
+.mclose{position:absolute;top:16px;right:16px;z-index:2;width:40px;height:40px;border-radius:999px;border:0;
+  background:rgba(255,255,255,.92);color:var(--text);font-size:20px;line-height:1;cursor:pointer;
+  display:grid;place-items:center;box-shadow:0 2px 10px rgba(15,23,42,.2)}
+.mclose:hover{background:#fff}
+.mshots{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--border)}
+.mshots figure{margin:0;background:var(--surface);display:flex;flex-direction:column}
+.mshots img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;background:var(--soft)}
+.srcbtn{display:flex;align-items:center;justify-content:center;gap:7px;min-height:44px;padding:10px 14px;
+  font-size:13.5px;font-weight:600;color:var(--primary);text-decoration:none;background:var(--surface);
+  border-top:1px solid var(--border);transition:background .15s}
+.srcbtn:hover{background:var(--tint)}
+.srcbtn svg{width:14px;height:14px;flex:none}
+.mbody{padding:28px 32px 32px}
+.mtop{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.mbody h2{font-size:30px;font-weight:700;letter-spacing:-.02em;margin-top:12px}
+.msub{margin-top:5px;font-size:15px;color:var(--muted)}
+.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:24px}
+.fact{background:var(--soft);border-radius:14px;padding:16px 18px}
+.fact .k{font-size:12.5px;font-weight:600;letter-spacing:.03em;text-transform:uppercase;color:var(--muted)}
+.fact .v{margin-top:6px;font-size:20px;font-weight:700;letter-spacing:-.015em;font-variant-numeric:tabular-nums;line-height:1.25}
+.fact .v.sm{font-size:15.5px;font-weight:600;line-height:1.4}
+.fact .s{margin-top:4px;font-size:13px;color:var(--muted);font-weight:400}
+.mdetails{margin-top:30px;padding-top:26px;border-top:1px solid var(--border);display:grid;gap:22px}
+.blk .k{font-size:12.5px;font-weight:600;letter-spacing:.03em;text-transform:uppercase;color:var(--muted)}
+.blk .v{margin-top:6px;font-size:16px;color:var(--text-2);line-height:1.6}
+.note{background:var(--amber-bg);border-radius:14px;padding:16px 18px;font-size:15.5px;color:#78350F;line-height:1.55}
+.mfoot{margin-top:30px;display:flex;gap:12px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:50px;padding:0 26px;
+  border-radius:14px;font-size:16px;font-weight:600;text-decoration:none;cursor:pointer;border:1px solid transparent;
+  font-family:inherit;transition:all .15s}
+.btn-primary{background:var(--primary);color:#fff;box-shadow:0 2px 10px rgba(37,99,235,.28)}
+.btn-primary:hover{background:var(--primary-dark)}
+.btn-ghost{background:var(--surface);color:var(--text-2);border-color:var(--border-2)}
+.btn-ghost:hover{background:var(--soft);color:var(--text)}
+
+
+/* ---- modal sections: tables & charts ---- */
+.msec{margin-top:30px}
+.msec>h4{font-size:12.5px;font-weight:600;letter-spacing:.03em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+.msec>.hint{font-size:13px;color:var(--muted);margin-top:10px}
+
+.chk{display:grid;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.chk .r{display:grid;grid-template-columns:26px 1fr;gap:12px;align-items:start;background:var(--surface);padding:13px 16px}
+.chk .ic{width:22px;height:22px;border-radius:999px;display:grid;place-items:center;font-size:12px;font-weight:700;margin-top:1px}
+.chk .ic.y{background:#DCFCE7;color:#15803D}
+.chk .ic.n{background:#FEE2E2;color:#B91C1C}
+.chk .ic.q{background:var(--soft);color:var(--muted)}
+.chk .t{font-size:15px;font-weight:600;color:var(--text)}
+.chk .d{font-size:13.5px;color:var(--muted);margin-top:2px}
+
+.chart{display:grid;gap:9px}
+.chart .cr{display:grid;grid-template-columns:150px 1fr 112px;gap:12px;align-items:center;font-size:13.5px}
+.chart .cl{color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chart .ct{height:22px;background:var(--soft);border-radius:6px;overflow:hidden}
+.chart .ct i{display:block;height:22px;background:#CBD5E1;border-radius:6px}
+.chart .cv{text-align:right;font-variant-numeric:tabular-nums;color:var(--text-2);white-space:nowrap}
+.chart .cr.me .cl,.chart .cr.me .cv{color:var(--text);font-weight:700}
+.chart .cr.me .ct i{background:var(--primary)}
+.chart .cr.goal .cl,.chart .cr.goal .cv{color:var(--amber);font-weight:600}
+.chart .cr.goal .ct i{background:#FBBF24}
+
+.spec{width:100%;border-collapse:collapse;font-size:15px}
+.spec tr{border-bottom:1px solid var(--border)}
+.spec tr:last-child{border-bottom:0}
+.spec th{text-align:left;font-weight:500;color:var(--muted);padding:11px 16px 11px 0;width:38%;
+  font-size:14px;text-transform:none;letter-spacing:0;border:0;white-space:normal;vertical-align:top}
+.spec td{padding:11px 0;color:var(--text);font-weight:600;border:0;vertical-align:top}
+.spec td.q{color:var(--muted);font-weight:400}
+
+.econ{display:grid;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.econ .r{display:flex;justify-content:space-between;align-items:baseline;gap:16px;background:var(--surface);padding:13px 16px;font-size:15px}
+.econ .r .k{color:var(--text-2)}
+.econ .r .v{font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.econ .r.total{background:#FFFBEB}
+.econ .r.total .v{color:var(--amber)}
+@media (max-width:620px){ .chart .cr{grid-template-columns:110px 1fr 78px;font-size:12.5px} }
+
+
+/* ---- carousel ---- */
+.carousel{position:relative}
+.ctrack{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;
+  padding-bottom:4px;-webkit-overflow-scrolling:touch}
+.ctrack::-webkit-scrollbar{height:6px}
+.ctrack::-webkit-scrollbar-thumb{background:var(--border-2);border-radius:99px}
+.ctrack img{flex:0 0 calc(50% - 6px);min-width:0;width:calc(50% - 6px);aspect-ratio:4/3;object-fit:cover;
+  border-radius:14px;scroll-snap-align:start;background:var(--soft);display:block}
+.cnav{position:absolute;top:50%;transform:translateY(-50%);width:42px;height:42px;border-radius:999px;
+  background:var(--surface);border:1px solid var(--border);box-shadow:0 4px 14px rgba(15,23,42,.14);
+  cursor:pointer;display:grid;place-items:center;color:var(--text);z-index:2}
+.cnav:hover{background:var(--soft)}
+.cnav svg{width:18px;height:18px}
+.cnav.prev{left:-16px}
+.cnav.next{right:-16px}
+@media (max-width:900px){
+  .ctrack img{flex:0 0 100%;width:100%}
+  .cnav.prev{left:6px} .cnav.next{right:6px}
+}
+
+/* ---- table ---- */
+.tablewrap{overflow-x:auto;padding-top:18px}
+table{width:100%;border-collapse:collapse;font-size:15px;min-width:720px}
+th{text-align:left;font-size:12.5px;font-weight:600;letter-spacing:.03em;text-transform:uppercase;color:var(--muted);
+  padding:0 16px 12px 0;border-bottom:1px solid var(--border-2);white-space:nowrap}
+td{padding:14px 16px 14px 0;border-bottom:1px solid var(--border);vertical-align:middle}
+tbody tr:hover{background:var(--soft)}
+.tname{font-weight:600}
+.tprice{font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.tmiss{color:var(--muted);font-weight:400}
+td a{color:var(--primary);font-weight:600;text-decoration:none}
+td a:hover{text-decoration:underline}
+
+/* ---- checklist ---- */
+.checks{display:grid;gap:16px;padding-top:20px;counter-reset:c}
+.check{display:grid;grid-template-columns:30px 1fr;gap:12px;font-size:15.5px;color:var(--text-2)}
+.check::before{counter-increment:c;content:counter(c);width:28px;height:28px;border-radius:999px;background:var(--tint);
+  color:var(--primary);font-size:13px;font-weight:700;display:grid;place-items:center}
+.check b{color:var(--text);font-weight:600}
+
+footer{margin-top:56px;padding:28px 0 64px;border-top:1px solid var(--border);font-size:14px;color:var(--muted)}
+footer p{margin:0 0 8px;max-width:90ch}
+
+@media (max-width:1150px){ .grid{grid-template-columns:repeat(3,1fr);min-height:1880px} }
+@media (max-width:900px){
+  .grid{grid-template-columns:repeat(2,1fr);min-height:2800px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .facts{grid-template-columns:1fr;gap:10px}
+  .mbody{padding:24px 22px 26px}
+  .mbody h2{font-size:25px}
+}
+@media (max-width:620px){
+  .wrap{padding:0 16px}
+  header{padding:36px 0 8px}
+  .grid{grid-template-columns:1fr;min-height:0}
+  .count{margin-left:0;width:100%}
+  .scrim{padding:0}
+  .modal{border-radius:0;min-height:100vh}
+  .mshots{grid-template-columns:1fr}
+  .mfoot .btn{width:100%}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media print{.card:hover{transform:none} details>.dbody{display:block}}
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+<header>
+  <div class="kicker">Подбор подрядчика · 02.09.2026</div>
+  <h1>Заводы сборных домов Украины</h1>
+</header>
+
+<section id="katalog">
+  <h2 class="sec-title">Все 16 компаний</h2>
+  <p class="sec-sub">Нажмите на карточку — откроется полная информация: цена, срок, мощность, прайс и вопросы для звонка.</p>
+  <div class="filters" id="filters"></div>
+  <div class="grid" id="grid"></div>
+</section>
+
+<section id="extra">
+  <details>
+    <summary>Ещё 5 вещей, которые стоит знать <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></span></summary>
+    <div class="dbody"><div class="flist">
+      <div class="fitem"><h3>Цифра «227 тыс. ₴» в расчёте похожа на ошибку</h3>
+        <p>227 000 — это ровно <b>2,27 млн ÷ 10</b>. А 2,27 млн ₴ стоит дом Scandic 84 м² у МодульДим. Похоже, потерялся один разряд. Проверить до звонков: на этой цифре держится вся экономика.</p></div>
+      <div class="fitem"><h3>Цену публикуют только 6 компаний из 16</h3>
+        <p>У десяти — «по запросу». Сравнивать по деньгам пока можно шестерых, и три цены из шести — «от», то есть без фундамента и отделки. Первая задача обзвона — <b>собрать прайсы</b>, а не выбрать.</p></div>
+      <div class="fitem"><h3>Под целевую цену есть две зацепки</h3>
+        <p><b>КиевКаркас</b> — $300 за м², ровно $30 тысяч за дом. И <b>Unitfab</b>, серия для переселенцев — от $24 500. Обе цифры почти наверняка не «под ключ с отделкой». Комплектацию по ним выяснять первой.</p></div>
+      <div class="fitem"><h3>Больше 10 домов в месяц тянут единицы</h3>
+        <p>Мощности хватает у <b>NordiHouse</b> (до 40 домов одновременно), <b>Сервуса</b> (340 человек) и <b>Укрпанели</b> (30 000 м² в год). У КиевКаркас 310 объектов за 10 лет — это 2,6 дома в месяц. Одним подрядчиком серию не закрыть.</p></div>
+      <div class="fitem"><h3>Не все проходят под формулировку ТЗ</h3>
+        <p>«Сборно-щитовые, не контейнеры» — это 6 модульно-каркасных и 6 СИП-компаний. <b>БлокМодуль</b> — металлокаркас, формально вне рамки. <b>7CI, CLT Rezult, КОЛЕО</b> — CLT: хорошо, но в $30 тысяч не уложится никогда.</p></div>
+    </div></div>
+  </details>
+
+  <details>
+    <summary>Сравнить всех в одной таблице <span class="hint">16 строк</span><span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></span></summary>
+    <div class="dbody">
+      <div class="tablewrap"><table>
+        <thead><tr><th>Компания</th><th>Технология</th><th>Цена за дом 100 м²</th><th>Срок</th><th>Сайт</th></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table></div>
+      <p style="font-size:13.5px;color:var(--muted);margin:16px 0 0;max-width:90ch">Цены приведены к одному виду: сколько стоит дом 100 м² под ключ. Курс на 09.2026: $1 = 41,5 ₴, €1 = 48,5 ₴. Это не оферта — ориентир для разговора.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>Что спрашивать у всех одинаково <span class="hint">8 вопросов</span><span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></span></summary>
+    <div class="dbody"><div class="checks">
+      <div class="check"><div><b>Цена за весь дом, а не за метр.</b> И письменно: что входит, что сверху. «От 20 000 ₴/м²» часто превращается в 27 000 при первом уточнении.</div></div>
+      <div class="check"><div><b>Входит ли плитный фундамент.</b> В ТЗ он есть, в прайсах чаще всего нет. То же — доставка и монтаж.</div></div>
+      <div class="check"><div><b>Что считается чистовой отделкой.</b> Полы, двери, сантехника, кухня, электрика — по каждому пункту да или нет.</div></div>
+      <div class="check"><div><b>Сколько домов в месяц при полной загрузке</b> и сколько из них свободно под этот проект в ближайший год. Это разные числа.</div></div>
+      <div class="check"><div><b>Оптовая цена на 74 дома и отдельно на 400.</b> Скидка за объём — главный рычаг, розничный прайс к серии отношения не имеет.</div></div>
+      <div class="check"><div><b>График платежей.</b> У БлокМодуль предоплата 80% — на 74 домах это неподъёмный разрыв. Нужна поэтапная оплата.</div></div>
+      <div class="check"><div><b>Два-три адреса сданных объектов</b> для выезда. У части компаний на сайте только визуализации.</div></div>
+      <div class="check"><div><b>Опыт серийной застройки, а не отдельных домов.</b> Городок, посёлок, жильё для переселенцев — где считали такт и логистику.</div></div>
+    </div></div>
+  </details>
+
+  <details>
+    <summary>Откуда данные и чего в них нет <span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></span></summary>
+    <div class="dbody"><div class="rows">
+      <div class="row"><div class="k">Источники</div><div class="v">Контакты, цены, сроки и мощности — с официальных сайтов компаний, проверено 02.09.2026. Фотографии тоже с сайтов производителей, права принадлежат компаниям, используются для сравнения производителей.</div></div>
+      <div class="row"><div class="k">Чего нет</div><div class="v">Телефоны никто не прозванивал — прозвон обязателен. Цены с сайтов розничные и, как правило, «от». Десять компаний цену не публикуют вовсе.</div></div>
+      <div class="row"><div class="k">Требования проекта</div><div class="v">74 дома (до 400 на 8 га по 5 соток), ~100 м², плитный фундамент, под ключ с чистовой отделкой, сборно-щитовые, не контейнеры. Коммуникации 16,8 млн ₴ на проект: электрика 6,3; вода и канализация 0,8; газ 9,8. Опции: 10-футовые контейнеры как подвал или укрытие, газогенераторы, дровяные камины.</div></div>
+    </div></div>
+  </details>
+</section>
+</div>
+
+<div class="scrim" id="scrim" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mtitle">
+    <button class="mclose" id="mclose" aria-label="Закрыть">&#10005;</button>
+    <div id="mcontent"></div>
+  </div>
+</div>
+
+<footer><div class="wrap">
+  <p>Материал для выбора подрядчика на серию домов.</p>
+</div></footer>
+
+<script type="application/json" id="d-tiles">{"nordihouse": "nordihouse_0", "kievkarkas": "kievkarkas_0", "norvil": "norvil_0", "moduldom": "moduldom_0", "unitfab": "unitfab_0", "bauenhaus": "bauenhaus_0", "blockmodul": "blockmodul_0", "lighthouse": "lighthouse_0", "ukrpanel": "ukrpanel_0", "sippro": "sippro_0", "paneco": "paneco_0", "servus": "servus_0", "sevenci": "sevenci_0", "cltrezult": "cltrezult_0", "kbkkharkov": "kbkkharkov_0", "koleo": "koleo_0"}</script>
+<script>
+const DATA = [{"id": "nordihouse", "n": 1, "name": "NordiHouse", "name2": "Норди Хаус", "tech": "Модульные каркасные", "techFull": "Заводские объёмные модули, деревянный каркас, под ключ", "region": "Киев и область", "loc": "Киев, шоурум с. Хотов", "phone": "+38 097 060 59 59", "email": "", "site": "https://nordi.house", "siteLabel": "nordi.house", "priceRaw": "от 21 000–22 000 грн/м² под ключ", "price100": 2150000, "caveat": "", "term": "30–45 дней", "termDays": 38, "years": 10, "cap": "10+ лет, 800+ проектов, до 40 домов одновременно", "capNote": "до 40 домов одновременно", "comment": "Один из крупнейших модульных производителей. Есть Family 73 и Family 120 м². Ближе всех к тому, что нужно проекту: заводской модуль, под ключ, срок в неделях.", "ask": "Оптовая цена на серию 74 дома. Реальный такт завода в месяц при полной загрузке. Входят ли плитный фундамент, доставка и чистовая отделка в 21–22 тыс. грн/м².", "prio": 1, "tz": [{"s": "y", "note": ""}, {"s": "y", "note": "заявлено «под ключ»"}, {"s": "n", "note": "≈ $52 000 против цели $30 000"}, {"s": "y", "note": "до 40 домов одновременно"}, {"s": "y", "note": ""}], "termShort": "30–45 дней"}, {"id": "kievkarkas", "n": 2, "name": "КиевКаркас / КБК", "name2": "Карпатыбуд Каркас", "tech": "Каркасные + модульные", "techFull": "Канадская каркасная технология, модульные дома", "region": "Киев и область", "loc": "Киев (офис), филиалы Львов, Одесса, Харьков, Днепр", "phone": "+38 067 554 51 14, +38 095 454 51 14", "email": "kiev.karkas5.ua@gmail.com", "site": "https://kiev-karkas.com.ua", "siteLabel": "kiev-karkas.com.ua", "priceRaw": "от $300/м² (модульные)", "price100": 1245000, "caveat": "Единственная цена, попадающая в ориентир $30 тыс. Почти наверняка это не «под ключ с чистовой отделкой» — комплектацию надо подтвердить письменно.", "term": "3–4 месяца", "termDays": 105, "years": 10, "cap": "10+ лет, 310+ объектов, сейчас строят 7 в Киеве", "capNote": "310+ объектов за 10 лет ≈ 2,6 дома в месяц", "comment": "Делают таунхаусы и дуплексы, жильё для ВПЛ. Сетевая компания с филиалами — подходит под серийный заказ.", "ask": "Что именно входит в $300/м²: коробка, домокомплект или под ключ. Как закрывать 74 дома при историческом темпе ~31 объект в год. Готовы ли выделить отдельную линию под проект.", "prio": 1, "tz": [{"s": "y", "note": ""}, {"s": "q", "note": "что входит в $300/м² — не указано"}, {"s": "y", "note": "$300/м² = ровно $30 000 за 100 м²"}, {"s": "n", "note": "310 объектов за 10 лет ≈ 2,6 дома в месяц"}, {"s": "y", "note": ""}], "termShort": "3–4 мес"}, {"id": "norvil", "n": 3, "name": "Norvil / ModulHouse", "name2": "ООО «СМБ Захид»", "tech": "Модульные каркасные", "techFull": "Деревянный каркас, заводская сборка модулей", "region": "Киев и область", "loc": "Васильков (Киевская обл.) и Жовква (Львовская обл.)", "phone": "+38 095 228 52 55, +38 098 730 78 75", "email": "smbzaxid@gmail.com", "site": "https://norvil.com.ua", "siteLabel": "norvil.com.ua", "priceRaw": "", "price100": null, "caveat": "", "term": "1,5–2 мес производство, монтаж через 2–3 мес", "termDays": 53, "years": null, "cap": "Два цеха, 36 тыс. подписчиков в Facebook", "capNote": "два производственных цеха", "comment": "Два производства сразу — это больше мощности, чем у одноплощадочных конкурентов. Васильков в 35 км от Киева, короткое плечо доставки.", "ask": "Прайс на дом 100 м² под ключ. Суммарная мощность двух цехов в домах в месяц. Почему монтаж только через 2–3 месяца после производства — это очередь или логистика.", "prio": 1, "tz": [{"s": "y", "note": ""}, {"s": "q", "note": ""}, {"s": "q", "note": ""}, {"s": "q", "note": "два цеха, цифра в месяц не заявлена"}, {"s": "n", "note": ""}], "termShort": "1,5–2 мес"}, {"id": "moduldom", "n": 4, "name": "МодульДим", "name2": "ModulDim", "tech": "Модульные каркасные", "techFull": "Модульные каркасные дома и каркасные домокомплекты", "region": "Киев и область", "loc": "с. Глеваха (шоурум), производство в Украине", "phone": "+38 067 464 22 78", "email": "moduldom.bud@gmail.com", "site": "https://moduldom.com.ua", "siteLabel": "moduldom.com.ua", "priceRaw": "от 22 000 грн/м² (фундамент и доставка отдельно)", "price100": 2200000, "caveat": "Заявлено «от 22 000 грн/м²», но в прайсе Scandic 84 м² стоит 2,27 млн грн — это 27 024 грн/м², то есть ~2,70 млн за 100 м². Фундамент и доставка сверху.", "term": "от 60 дней производство + 2–10 дней монтаж", "termDays": 62, "years": 13, "cap": "13 лет, сертификаты ЕС, гарантия 5 лет", "capNote": "мощность не заявлена", "comment": "Есть готовые серии ECOHOUSE 144 м² и Scandic 84 м². Индивидуальное проектирование с нуля не берут — для серии это скорее плюс.", "ask": "Что входит в 22 000 грн/м² и почему Scandic выходит на 27 000. Цена с плитным фундаментом и доставкой. Сколько модулей в месяц выдаёт производство.", "prio": 1, "tz": [{"s": "y", "note": ""}, {"s": "q", "note": "фундамент и доставка считаются отдельно"}, {"s": "n", "note": "≈ $53 000"}, {"s": "q", "note": "мощность не заявлена"}, {"s": "y", "note": ""}], "termShort": "от 60 дней"}, {"id": "unitfab", "n": 5, "name": "Unitfab", "name2": "", "tech": "Prefab-панели", "techFull": "Крупные заводские панели, деревянный каркас", "region": "Киев и область", "loc": "Производство — Киевская обл., офис — Киев", "phone": "+38 093 170 00 42 (консультация), +38 063 564 06 05 (сотрудничество)", "email": "sales@unitfab.com", "site": "https://unitfab.com", "siteLabel": "unitfab.com", "priceRaw": "от $450/м²; дом 80–100 м²: базовый $25–35 тыс., под ключ $40–60 тыс.", "price100": 2075000, "caveat": "Серия Dim для ВПЛ заявлена от $24 500 — это единственное предложение на рынке ниже целевой цены. Разобраться, что в неё входит и масштабируется ли она на 74 дома.", "term": "3 месяца", "termDays": 90, "years": null, "cap": "Национальный prefab-производитель, серия Dim для ВПЛ от $24 500", "capNote": "серия Dim от $24 500", "comment": "Серии Flathouse 72–117 м² и U2 106 м². Единственные, кто прямо на сайте заявляет оптовое сотрудничество и держит для него отдельный номер. Отдельно стоит отметить интерьеры: дома сдают с готовой кухней, санузлом, светом и мебелью, уровень отделки заметно выше среднего по рынку.", "ask": "Комплектация серии Dim за $24 500 и можно ли её тиражировать на 74 дома. Разница между базовым $25–35 тыс. и под ключ $40–60 тыс. Мощность завода в домах в месяц.", "prio": 1, "tz": [{"s": "y", "note": ""}, {"s": "y", "note": "есть вариант под ключ $40–60 тыс."}, {"s": "q", "note": "под ключ $40–60 тыс., но серия Dim от $24 500"}, {"s": "q", "note": "мощность в домах в месяц не заявлена"}, {"s": "y", "note": ""}], "termShort": "3 мес"}, {"id": "bauenhaus", "n": 6, "name": "Bauen Haus", "name2": "Бауен Хаус", "tech": "СИП-панели", "techFull": "СИП-панели собственного завода + модульные дома", "region": "Киев и область", "loc": "Киев, ул. Васильковская, 28 (выставочный дом-офис)", "phone": "+38 050 816 40 84, +38 044 334 31 84", "email": "info@bauenhaus.ua", "site": "https://bauenhaus.ua", "siteLabel": "bauenhaus.ua", "priceRaw": "", "price100": null, "caveat": "", "term": "30 дней производство, монтаж 1 день", "termDays": 30, "years": null, "cap": "Домостроительный комбинат, новости с объектов 06–08.2026", "capNote": "свой завод панелей", "comment": "Делают таунхаусы и дуплексы из СИП. Собственное производство панелей означает предсказуемую себестоимость на длинной серии. Самый короткий заявленный цикл производства.", "ask": "Цена под ключ на 100 м² с чистовой отделкой. Сколько домокомплектов в месяц реально отгружают. Есть ли объекты серийной застройки, а не единичные дома.", "prio": 2, "tz": [{"s": "y", "note": "СИП-панели"}, {"s": "q", "note": ""}, {"s": "q", "note": ""}, {"s": "q", "note": "цикл 30 дней, объём в месяц не заявлен"}, {"s": "n", "note": ""}], "termShort": "30 дней"}, {"id": "blockmodul", "n": 7, "name": "БлокМодуль", "name2": "", "tech": "Металлокаркас", "techFull": "Модульные здания на металлокаркасе", "region": "Киев и область", "loc": "Киев, ул. Ильинская 12; завод — Славутич", "phone": "+38 098 853 40 40, +38 095 853 40 40", "email": "info@blockmodul.com.ua", "site": "https://blockmodul.com.ua", "siteLabel": "blockmodul.com.ua", "priceRaw": "от 20 000 грн/м²; МД7 96 м² от 2,09 млн грн; МД8 108 м² от 2,31 млн грн", "price100": 2000000, "caveat": "Требование проекта: «сборно-щитовые, не контейнеры». Металлокаркасный блок-модуль формально в эту рамку не попадает — решение принимать отдельно. Предоплата 80%.", "term": "35–75 дней", "termDays": 55, "years": 18, "cap": "С 2008 года, 3800+ оценок со средней 4,71", "capNote": "опыт серийных городков и общежитий", "comment": "Строили модульные городки и общежития — то есть умеют не единичный дом, а серию. Портфолио преимущественно коммерческое: офисы, посты, торговые модули.", "ask": "Согласуют ли поэтапную оплату вместо предоплаты 80% на серию. Есть ли деревянный каркас как альтернатива металлу. Реальный выпуск модулей в месяц.", "prio": 2, "tz": [{"s": "n", "note": "металлокаркас — формально вне формулировки «не контейнеры»"}, {"s": "q", "note": ""}, {"s": "n", "note": "≈ $48 000"}, {"s": "q", "note": "делали городки и общежития, цифра в месяц не заявлена"}, {"s": "y", "note": ""}], "termShort": "35–75 дней"}, {"id": "lighthouse", "n": 8, "name": "Light House", "name2": "Лайт Хаус", "tech": "СИП-панели", "techFull": "СИП-панели собственного завода + домокомплекты", "region": "Киев и область", "loc": "Киев, ул. Сумская, 1", "phone": "+38 067 345 66 05, +38 063 442 99 77, +38 044 209 16 85", "email": "info@lighthouse.kyiv.ua", "site": "https://lighthouse.kyiv.ua", "siteLabel": "lighthouse.kyiv.ua", "priceRaw": "", "price100": null, "caveat": "", "term": "", "termDays": null, "years": null, "cap": "Участник программы «єВідновлення»", "capNote": "партнёрская программа для застройщиков", "comment": "Завод в Киеве, отдельная страница партнёрства — то есть с застройщиками работать привыкли. Участие в «єВідновлення» означает пройденные госпроцедуры и проверенную документацию.", "ask": "Условия партнёрской программы для застройщика. Цена под ключ и цена домокомплекта отдельно. Срок на партию из 10 домов.", "prio": 2, "tz": [{"s": "y", "note": "СИП-панели"}, {"s": "q", "note": ""}, {"s": "q", "note": ""}, {"s": "q", "note": ""}, {"s": "n", "note": ""}], "termShort": ""}, {"id": "ukrpanel", "n": 9, "name": "Укрпанель", "name2": "ООО «УКРПАНЕЛЬ», ЕДРПОУ 41000384", "tech": "СИП-панели", "techFull": "СИП-панели собственного завода + строительство под ключ", "region": "Киев и область", "loc": "Киев, ул. Новоконстантиновская 22/15", "phone": "+38 093 477 33 11, +38 095 477 33 11, +38 097 477 33 11", "email": "ukrpanel@ukr.net", "site": "https://ukrpanel.com", "siteLabel": "ukrpanel.com", "priceRaw": "", "price100": null, "caveat": "", "term": "", "termDays": null, "years": 16, "cap": "16 лет, 400+ домов, мощность до 30 000 м² домокомплектов в год", "capNote": "30 000 м²/год ≈ 300 домов по 100 м²", "comment": "Единственные, кто заявил мощность в квадратных метрах: 30 000 м²/год — это 300 домов по 100 м², с запасом закрывает и 74, и 400 домов по комплектам.", "ask": "30 000 м²/год — это только панели или с монтажом. Цена под ключ и цена комплекта. Съездить на объект в Ирпене.", "prio": 2, "tz": [{"s": "y", "note": "СИП-панели"}, {"s": "y", "note": "строительство под ключ заявлено"}, {"s": "q", "note": ""}, {"s": "y", "note": "30 000 м²/год ≈ 300 домов по 100 м²"}, {"s": "n", "note": ""}], "termShort": ""}, {"id": "sippro", "n": 10, "name": "SIP PRO Ukraine", "name2": "SIPPU", "tech": "СИП-панели", "techFull": "СИП-панели, СИП-блоки, модульные СИП-дома", "region": "Киев и область", "loc": "Киев, ул. Гарматная 9; производство — с. Шкаровка возле Белой Церкви", "phone": "+38 096 520 20 20", "email": "ceo.sipukraine@gmail.com", "site": "https://sip-ukraine.com", "siteLabel": "sip-ukraine.com", "priceRaw": "", "price100": null, "caveat": "", "term": "", "termDays": null, "years": 16, "cap": "С 2010 года, работают через дилеров и с застройщиками", "capNote": "дилерская модель", "comment": "Скорее поставщик панелей и блоков, чем генподрядчик. Имеет смысл как способ удешевить материал, если генподряд возьмёт кто-то другой или своя бригада.", "ask": "Цена панелей на объём 74 дома. Готовы ли отгружать напрямую застройщику мимо дилера. Кто из их партнёров монтирует в Киевской области.", "prio": 3, "tz": [{"s": "y", "note": "СИП-панели и блоки"}, {"s": "n", "note": "поставщик панелей, не генподрядчик"}, {"s": "q", "note": ""}, {"s": "q", "note": ""}, {"s": "n", "note": ""}], "termShort": ""}, {"id": "paneco", "n": 11, "name": "Панеко", "name2": "ООО «ПАНЕКО-БУД»", "tech": "СИП-панели", "techFull": "СИП-панели собственного производства + строительство", "region": "Киевская область", "loc": "Белая Церковь, ул. Храпачанская", "phone": "+38 050 448 93 22 (Марк Гордиенко)", "email": "04489322@gmail.com", "site": "https://paneco.com.ua", "siteLabel": "paneco.com.ua", "priceRaw": "", "price100": null, "caveat": "На сайте только визуализации проектов, фотографий сданных объектов найти не удалось. Перед серией просить адреса реальных домов.", "term": "", "termDays": null, "years": 17, "cap": "17 лет, 150+ заказов, объекты до 900 м²", "capNote": "150+ заказов за 17 лет ≈ 9 в год", "comment": "Небольшой производитель. При историческом темпе около девяти заказов в год серия из 74 домов для них — двадцатилетняя программа. Как единственный подрядчик не годится, как второй поставщик панелей — возможно.", "ask": "Фактическая мощность цеха в м² в месяц. Адреса сданных объектов для выезда. Готовы ли работать субподрядчиком по панелям.", "prio": 3, "tz": [{"s": "y", "note": "СИП-панели"}, {"s": "y", "note": "строительство под ключ"}, {"s": "q", "note": ""}, {"s": "n", "note": "150+ заказов за 17 лет ≈ 9 в год"}, {"s": "n", "note": ""}], "termShort": ""}, {"id": "servus", "n": 12, "name": "Сервус", "name2": "Servus", "tech": "СИП-панели", "techFull": "СИП-панели (крупнейший завод в Украине), каркасно-щитовые дома", "region": "Львовская область", "loc": "Центральный офис — Дрогобыч, представительство в Киеве", "phone": "0 800 21 56 56, +38 098 578 30 30", "email": "sell@servusbud.com", "site": "https://servus.ua", "siteLabel": "servus.ua", "priceRaw": "домокомплект от $95/м², каркас от $140/м², ~100 м² под ключ ≈ $60 000", "price100": 2490000, "caveat": "Цена под ключ вдвое выше целевой. Но домокомплект от $95/м² — это $9,5 тыс. за 100 м²; если монтаж и отделку закрывать своими силами, экономика меняется полностью.", "term": "2–3 месяца под ключ", "termDays": 75, "years": null, "cap": "2390 проектов, 340 работников, 21 представительство", "capNote": "крупнейшая мощность в стране", "comment": "Самый большой ресурс на рынке: 2390 проектов и 340 человек. С таким подрядчиком есть о чём торговаться на объёме — но плечо от Дрогобыча до Киева около 600 км.", "ask": "Оптовая цена на 74 дома и отдельно на 400. Стоимость логистики до Киевской области. Цена варианта «домокомплект + наш монтаж».", "prio": 2, "tz": [{"s": "y", "note": "СИП и каркасно-щитовые"}, {"s": "y", "note": ""}, {"s": "n", "note": "≈ $60 000 под ключ"}, {"s": "y", "note": "2390 проектов, 340 работников"}, {"s": "y", "note": ""}], "termShort": "2–3 мес"}, {"id": "sevenci", "n": 13, "name": "7CI Group", "name2": "ООО «Севен Си Ай», ЕДРПОУ 41228981", "tech": "CLT", "techFull": "CLT-панели под ключ, генподряд (панели Rezult / Stora Enso)", "region": "Киев и область", "loc": "Киев, Харьковское шоссе 201–203", "phone": "+38 044 338 55 65, +38 044 337 05 72, +38 073 258 55 26", "email": "info@7cigroup.com", "site": "https://7cigroup.com", "siteLabel": "7cigroup.com", "priceRaw": "", "price100": null, "caveat": "В портфолио на сайте — бизнес-центры, офисы, отели, реставрация. Частных домов, тем более серийных, в портфолио нет.", "term": "", "termDays": null, "years": 17, "cap": "С 2009 года, Forbes NEXT 250 (2023)", "capNote": "генподрядчик, не производитель", "comment": "Это генподрядчик коммерческого строительства, а не домостроительный завод. CLT — премиальный материал: под цель $30 тыс. за дом не выходит ни при каком объёме.", "ask": "Есть ли вообще опыт серийной малоэтажки. Ориентир цены за м² в CLT под ключ — чтобы зафиксировать верхнюю границу рынка.", "prio": 3, "tz": [{"s": "q", "note": "CLT — массивные панели, не щитовые"}, {"s": "y", "note": "генподряд под ключ"}, {"s": "q", "note": "CLT — премиум-сегмент"}, {"s": "n", "note": "опыта серийной малоэтажки нет"}, {"s": "n", "note": ""}], "termShort": ""}, {"id": "cltrezult", "n": 14, "name": "CLT Rezult", "name2": "", "tech": "CLT", "techFull": "Производитель CLT-панелей (единственный в Украине)", "region": "Киев и Житомирская область", "loc": "Офис — Киев, ул. П. Сагайдачного 15; завод — Коростень", "phone": "+38 050 402 00 50, +38 067 361 89 99", "email": "office@clt-rezult.com", "site": "https://clt-rezult.com", "siteLabel": "clt-rezult.com", "priceRaw": "", "price100": null, "caveat": "", "term": "", "termDays": null, "years": null, "cap": "Единственный производитель CLT в Украине, экспорт в ЕС", "capNote": "единственный завод CLT в стране", "comment": "Поставщик панелей, строит через компании-партнёры. Держать в списке имеет смысл как ориентир по премиум-сегменту и как вариант для нескольких показательных домов, а не для всей серии.", "ask": "Цена CLT-комплекта на дом 100 м². Кто из партнёров монтирует под Киевом. Есть ли объём под серию, если она когда-нибудь понадобится.", "prio": 3, "tz": [{"s": "q", "note": "CLT — массивные панели, не щитовые"}, {"s": "n", "note": "поставщик панелей, строит через партнёров"}, {"s": "q", "note": ""}, {"s": "q", "note": ""}, {"s": "n", "note": ""}], "termShort": ""}, {"id": "kbkkharkov", "n": 15, "name": "КБК Харьков", "name2": "филиал группы КБК / КиевКаркас", "tech": "Модульные каркасные", "techFull": "Модульные каркасные дома, prefab", "region": "Харьков", "loc": "Харьков", "phone": "через КиевКаркас", "email": "", "site": "https://kbk.kharkov.ua", "siteLabel": "kbk.kharkov.ua", "priceRaw": "", "price100": null, "caveat": "Та же группа, что и КиевКаркас. Отдельно звонить не нужно — все переговоры вести через киевский офис, иначе получим два разных прайса от одной компании.", "term": "монтаж 3–5 дней", "termDays": null, "years": null, "cap": "Часть сети КБК", "capNote": "филиал, не отдельный завод", "comment": "В списке держим для полноты картины по группе КБК: показывает, что у сети есть производственные площадки не только в Киеве.", "ask": "Ничего отдельно. Вопросы задавать киевскому офису КиевКаркас.", "prio": 3, "tz": [{"s": "y", "note": ""}, {"s": "q", "note": ""}, {"s": "q", "note": ""}, {"s": "q", "note": "филиал, отдельного производства не заявлено"}, {"s": "n", "note": ""}], "termShort": ""}, {"id": "koleo", "n": 16, "name": "КОЛЕО", "name2": "ООО «КОЛЕО»", "tech": "CLT", "techFull": "CLT, модульные и деревянные дома", "region": "Ужгород", "loc": "Ужгород, ул. Радужная 30", "phone": "+38 093 597 95 79", "email": "koleo.sales@gmail.com", "site": "https://koleo.com.ua", "siteLabel": "koleo.com.ua", "priceRaw": "модульные от €950/м²", "price100": 4607500, "caveat": "Самая высокая цена в списке: 4,6 млн грн за 100 м² — это в 3,7 раза выше целевой цены. Плюс 800 км до площадки.", "term": "", "termDays": null, "years": null, "cap": "Экспорт домокомплектов в ЕС", "capNote": "ориентированы на экспорт", "comment": "Работают на экспортный рынок, отсюда и цена. Для проекта в Киевской области — резерв на случай, если понадобится премиальный образцовый дом.", "ask": "Только если понадобится премиум-образец. Цена и срок на один дом 100 м² с доставкой в Киевскую область.", "prio": 3, "tz": [{"s": "y", "note": "модульные"}, {"s": "q", "note": ""}, {"s": "n", "note": "€950/м² ≈ $111 000 за 100 м²"}, {"s": "q", "note": "ориентированы на экспорт"}, {"s": "y", "note": ""}], "termShort": ""}];
+const MODE = "files";              // "single" — всё в файле, "files" — отдельные картинки
+const INT_N = {"cltrezult": 2, "unitfab": 8};              // id -> сколько есть интерьеров
+const META  = {"nordihouse_0": {"w": 760, "h": 570}, "nordihouse_1": {"w": 760, "h": 570}, "kievkarkas_0": {"w": 760, "h": 570}, "kievkarkas_1": {"w": 760, "h": 570}, "norvil_0": {"w": 760, "h": 570}, "norvil_1": {"w": 760, "h": 570}, "moduldom_0": {"w": 760, "h": 570}, "moduldom_1": {"w": 760, "h": 570}, "unitfab_0": {"w": 760, "h": 570}, "unitfab_1": {"w": 760, "h": 570}, "bauenhaus_0": {"w": 760, "h": 570}, "bauenhaus_1": {"w": 600, "h": 450}, "blockmodul_0": {"w": 760, "h": 570}, "blockmodul_1": {"w": 760, "h": 570}, "lighthouse_0": {"w": 600, "h": 450}, "lighthouse_1": {"w": 600, "h": 450}, "ukrpanel_0": {"w": 686, "h": 514}, "ukrpanel_1": {"w": 600, "h": 450}, "sippro_0": {"w": 760, "h": 570}, "sippro_1": {"w": 760, "h": 570}, "paneco_0": {"w": 760, "h": 570}, "paneco_1": {"w": 760, "h": 570}, "servus_0": {"w": 760, "h": 570}, "servus_1": {"w": 760, "h": 570}, "sevenci_0": {"w": 760, "h": 570}, "sevenci_1": {"w": 448, "h": 336}, "cltrezult_0": {"w": 760, "h": 570}, "cltrezult_1": {"w": 760, "h": 570}, "kbkkharkov_0": {"w": 760, "h": 570}, "kbkkharkov_1": {"w": 760, "h": 570}, "koleo_0": {"w": 760, "h": 570}, "koleo_1": {"w": 760, "h": 570}, "int_cltrezult_0": {"w": 760, "h": 570}, "int_cltrezult_1": {"w": 760, "h": 570}, "int_unitfab_0": {"w": 760, "h": 570}, "int_unitfab_1": {"w": 760, "h": 570}, "int_unitfab_2": {"w": 760, "h": 570}, "int_unitfab_3": {"w": 760, "h": 570}, "int_unitfab_4": {"w": 760, "h": 570}, "int_unitfab_5": {"w": 760, "h": 570}, "int_unitfab_6": {"w": 760, "h": 570}, "int_unitfab_7": {"w": 760, "h": 570}};               // files: имя файла -> {w,h}
+const j = id => JSON.parse(document.getElementById(id).textContent);
+/* тяжёлые данные лежат в инертных <script type="application/json">.
+   Плитки разбираем сразу, остальное — при первом открытии карточки. */
+const TILES = j("d-tiles");
+let _rest = null, _int = null;
+const restOf = id => (_rest || (_rest = j("d-rest")))[id] || [];
+const intOf  = id => (_int  || (_int  = j("d-int")))[id]  || [];
+const SOURCES = {"nordihouse": [{"u": "https://nordi.house/", "l": "Источник фото"}, {"u": "https://nordi.house/", "l": "Источник фото"}], "kievkarkas": [{"u": "https://www.kiev-karkas.com.ua/wp-content/uploads/2026/03/astra-1-kk.jpg", "l": "Источник фото"}, {"u": "https://www.kiev-karkas.com.ua/wp-content/uploads/2026/06/viston-1-kk.jpg", "l": "Источник фото"}], "norvil": [{"u": "https://norvil.com.ua/projects", "l": "Страница проекта"}, {"u": "https://norvil.com.ua/projects", "l": "Страница проекта"}], "moduldom": [{"u": "https://moduldom.com.ua/proekti-budinkiv/", "l": "Страница проекта"}, {"u": "https://moduldom.com.ua/proekti-budinkiv/", "l": "Страница проекта"}], "unitfab": [{"u": "https://unitfab.com/cottages", "l": "Страница проекта"}, {"u": "https://unitfab.com/flathouse", "l": "Страница проекта"}], "bauenhaus": [{"u": "https://bauenhaus.ua/ru/proekt-budleia-80/", "l": "Страница проекта"}, {"u": "https://bauenhaus.ua/ru/proekt-valeria-106/", "l": "Страница проекта"}], "blockmodul": [{"u": "https://blockmodul.com.ua/karkasnyye-doma/karkasniy-dom-kd5/", "l": "Страница проекта"}, {"u": "https://blockmodul.com.ua/karkasnyye-doma/karkasniy-dom-kd4/", "l": "Страница проекта"}], "lighthouse": [{"u": "https://lighthouse.kyiv.ua/proiekt-koshytsi", "l": "Страница проекта"}, {"u": "https://lighthouse.kyiv.ua/proyekt-myunhen", "l": "Страница проекта"}], "ukrpanel": [{"u": "https://ukrpanel.com/proekty/odnoetazhniy-dom-iz-sip-panel-proekt-kazka/", "l": "Страница проекта"}, {"u": "https://ukrpanel.com/proekty/dom-sip-panels-proekt-sipdom-150/", "l": "Страница проекта"}], "sippro": [{"u": "https://sip-ukraine.com/product/modulnyj-budynok-hi-tech-max-80-kv-m-4-moduli/", "l": "Страница проекта"}, {"u": "https://sip-ukraine.com/product/modulnyj-budynok-hi-tech-max-40-kv-m-2-moduli/", "l": "Страница проекта"}], "paneco": [{"u": "https://paneco.com.ua/katalog-proektiv/budinok-z-sp-panelei-1-100-100-m", "l": "Страница проекта"}, {"u": "https://paneco.com.ua/katalog-proektiv/budinok-z-sp-panelei-1-80-80-m", "l": "Страница проекта"}], "servus": [{"u": "https://servus.ua/ua/projects/project-bern/", "l": "Страница проекта"}, {"u": "https://servus.ua/ua/projects/tuson/", "l": "Страница проекта"}], "sevenci": [{"u": "https://7cigroup.com/clt-panels/", "l": "Страница проекта"}, {"u": "https://7cigroup.com/portfolio/", "l": "Страница проекта"}], "cltrezult": [{"u": "https://clt-rezult.com/portfolio-item/budynky-vidpochynku-ethno/", "l": "Страница проекта"}, {"u": "https://clt-rezult.com/portfolio-item/modulnyy-budynok-simple/", "l": "Страница проекта"}], "kbkkharkov": [{"u": "https://kbk.kharkov.ua/turnkey-houses/clover/", "l": "Страница проекта"}, {"u": "https://kbk.kharkov.ua/turnkey-houses/bruno/", "l": "Страница проекта"}], "koleo": [{"u": "https://koleo.com.ua/modulni-budynky/proekt-fakhverk-60-1/", "l": "Страница проекта"}, {"u": "https://koleo.com.ua/modulni-budynky/proekt-high-tech-50-1/", "l": "Страница проекта"}]};
+const USD = 41.5;
+const TECHS = ["Модульные каркасные","Prefab-панели","Каркасные + модульные","СИП-панели","Металлокаркас","CLT"];
+let active = "";
+
+const fmt = n => n.toLocaleString("ru-RU").replace(/,/g," ");
+const mln = n => (n/1e6).toFixed(2).replace(".",",").replace(/,(\d)0$/,",$1");
+function el(t,c,h){const e=document.createElement(t); if(c)e.className=c; if(h!=null)e.innerHTML=h; return e;}
+
+/* filters */
+const fbox = document.getElementById("filters");
+[{v:"",l:"Все технологии"}].concat(TECHS.map(t=>({v:t,l:t}))).forEach(o=>{
+  const b=el("button","chip",o.l); b.type="button";
+  b.setAttribute("aria-pressed", o.v===active);
+  b.onclick=()=>{ active=o.v; document.querySelectorAll("#filters .chip").forEach(x=>x.setAttribute("aria-pressed","false"));
+    b.setAttribute("aria-pressed","true"); render(); };
+  fbox.appendChild(b);
+});
+const counter = el("span","count",""); fbox.appendChild(counter);
+
+
+/* ---------- изображения ---------- */
+const SIZES = {
+  tile: "(max-width:620px) 92vw, (max-width:900px) 46vw, (max-width:1150px) 31vw, 300px",
+  full: "(max-width:900px) 92vw, 440px",
+  int:  "(max-width:900px) 92vw, 420px"
+};
+function media(id, idx, slot, alt, opts){
+  opts = opts || {};
+  const load = opts.eager ? 'loading="eager"' : 'loading="lazy"';
+  const prio = opts.priority ? ' fetchpriority="high"' : '';
+  const cls  = opts.cls ? ' class="'+opts.cls+'"' : '';
+  if(MODE === "single"){
+    const uri = slot === "int" ? intOf(id)[idx] : (idx === 0 ? TILES[id] : restOf(id)[idx-1]);
+    return '<img'+cls+' src="'+uri+'" width="640" height="480" alt="'+alt+'" '+load+prio+' decoding="async">';
+  }
+  const base = slot === "int" ? intOf(id)[idx] : (idx === 0 ? TILES[id] : restOf(id)[idx-1]);
+  const m = META[base] || {w:760, h:570};
+  const ss = [480,640,760].map(w => "m/"+base+"-"+w+".webp "+w+"w").join(", ");
+  return '<img'+cls+' src="m/'+base+'-640.webp" srcset="'+ss+'" sizes="'+SIZES[slot]+'"'
+       + ' width="'+m.w+'" height="'+m.h+'" alt="'+alt+'" '+load+prio+' decoding="async">';
+}
+
+function fmtUsd(c){ return "$"+fmt(Math.round(c.price100/USD/500)*500); }
+
+/* ---------- визуальные блоки для окна ---------- */
+const GOAL = 30000*USD;                       /* целевая цена в гривне */
+const PRICED = DATA.filter(c=>c.price100);
+const MAXP = Math.max(GOAL, ...PRICED.map(c=>c.price100));
+const TERMED = DATA.filter(c=>c.termDays);
+const MAXT = Math.max(...TERMED.map(c=>c.termDays));
+const TZ_LABELS = ["Сборно-щитовая, не контейнер","Под ключ с чистовой отделкой",
+                   "Цена укладывается в $30 000","Мощность больше 10 домов в месяц","Прайс опубликован"];
+
+
+function interiorBlock(c){
+  const n = INT_N[c.id] || 0;
+  if(!n) return "";
+  const imgs = Array.from({length:n}, (_,i)=>media(c.id, i, "int", "Интерьер дома "+c.name+", фото "+(i+1), {eager: i < 2})).join("");
+  const arrow = d => '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M'+(d==="l"?"15 6l-6 6 6 6":"9 6l6 6-6 6")+'"/></svg>';
+  return '<div class="msec"><h4>Интерьеры</h4><div class="carousel">'
+    + '<button class="cnav prev" type="button" aria-label="Предыдущие фото">'+arrow("l")+'</button>'
+    + '<div class="ctrack" id="ctrack">'+imgs+'</div>'
+    + '<button class="cnav next" type="button" aria-label="Следующие фото">'+arrow("r")+'</button>'
+    + '</div><div class="hint">Фотографии интерьеров с сайта компании.</div></div>';
+}
+
+function checkTable(c){
+  const rows=(c.tz||[]).map((t,i)=>
+    '<div class="r"><span class="ic '+t.s+'">'+(t.s==="y"?"&#10003;":t.s==="n"?"&#10005;":"?")+'</span>'
+    + '<div><div class="t">'+TZ_LABELS[i]+'</div>'+(t.note?'<div class="d">'+t.note+'</div>':'')+'</div></div>').join("");
+  return '<div class="msec"><h4>Соответствие требованиям проекта</h4><div class="chk">'+rows+'</div>'
+       + '<div class="hint">Знак «?» значит, что данных на сайте нет — это и есть вопрос для звонка.</div></div>';
+}
+
+function priceChart(c){
+  const rows=[{l:"Целевая цена",v:GOAL,cls:"goal",t:"$30 000"}]
+    .concat(PRICED.map(x=>({l:x.name,v:x.price100,cls:x.id===c.id?"me":"",t:"≈ "+mln(x.price100)+" млн ₴"})))
+    .sort((a,b)=>a.v-b.v);
+  const bars=rows.map(r=>'<div class="cr '+r.cls+'"><span class="cl">'+r.l+'</span>'
+    + '<span class="ct"><i style="width:'+Math.round(r.v/MAXP*100)+'%"></i></span>'
+    + '<span class="cv">'+r.t+'</span></div>').join("");
+  const note = c.price100 ? "" : '<div class="hint">У этой компании цены нет — показан рынок, чтобы было с чем сравнить её ответ по телефону.</div>';
+  return '<div class="msec"><h4>Цена за дом 100 м² в сравнении</h4><div class="chart">'+bars+'</div>'+note+'</div>';
+}
+
+function termChart(c){
+  if(!TERMED.length) return "";
+  const rows=TERMED.map(x=>({l:x.name,v:x.termDays,cls:x.id===c.id?"me":"",t:x.termShort||x.term}))
+    .sort((a,b)=>a.v-b.v);
+  const bars=rows.map(r=>'<div class="cr '+r.cls+'"><span class="cl">'+r.l+'</span>'
+    + '<span class="ct"><i style="width:'+Math.round(r.v/MAXT*100)+'%"></i></span>'
+    + '<span class="cv">'+r.t+'</span></div>').join("");
+  const note = c.termDays ? "" : '<div class="hint">Срок этой компании не заявлен — показаны те, кто его называет.</div>';
+  return '<div class="msec"><h4>Срок производства в сравнении</h4><div class="chart">'+bars+'</div>'
+       + '<div class="hint">Длина полосы — по середине заявленного диапазона. Восемь компаний срок не называют.</div>'+note+'</div>';
+}
+
+function econTable(c){
+  if(!c.price100) return "";
+  const total=c.price100*74, goal=GOAL*74, diff=total-goal;
+  const m=n=>(n/1e6).toFixed(1).replace(".",",");
+  const usd=n=>"$"+fmt(Math.round(n/USD/10000)*10000);
+  return '<div class="msec"><h4>Что это значит на серии из 74 домов</h4><div class="econ">'
+    + '<div class="r"><span class="k">Один дом</span><span class="v">≈ '+mln(c.price100)+' млн ₴ · '+fmtUsd(c)+'</span></div>'
+    + '<div class="r"><span class="k">74 дома по этой цене</span><span class="v">≈ '+m(total)+' млн ₴ · '+usd(total)+'</span></div>'
+    + '<div class="r"><span class="k">74 дома по целевой цене</span><span class="v">≈ '+m(goal)+' млн ₴ · $2 220 000</span></div>'
+    + '<div class="r total"><span class="k">'+(diff>=0?"Дороже цели на":"Дешевле цели на")+'</span><span class="v">'
+    +   (diff>=0?"+":"−")+' '+m(Math.abs(diff))+' млн ₴ · '+usd(Math.abs(diff))+'</span></div>'
+    + '</div></div>';
+}
+
+function specTable(c){
+  const q=v=>v?'<td>'+v+'</td>':'<td class="q">нет данных</td>';
+  const perM = c.price100 ? fmt(Math.round(c.price100/100/100)*100)+" ₴/м²" : "";
+  return '<div class="msec"><h4>Параметры</h4><table class="spec"><tbody>'
+    + '<tr><th>Технология</th>'+q(c.techFull)+'</tr>'
+    + '<tr><th>Цена за м²</th>'+q(perM)+'</tr>'
+    + '<tr><th>Цена за дом 100 м²</th>'+q(c.price100?"≈ "+mln(c.price100)+" млн ₴ · "+fmtUsd(c):"")+'</tr>'
+    + '<tr><th>Прайс компании</th>'+q(c.priceRaw)+'</tr>'
+    + '<tr><th>Срок производства</th>'+q(c.term)+'</tr>'
+    + '<tr><th>Лет на рынке</th>'+q(c.years?c.years+"+":"")+'</tr>'
+    + '<tr><th>Опыт и мощность</th>'+q(c.cap)+'</tr>'
+    + '<tr><th>Регион</th>'+q(c.region)+'</tr>'
+    + '<tr><th>Адрес</th>'+q(c.loc)+'</tr>'
+    + '<tr><th>Телефон</th>'+q(c.phone)+'</tr>'
+    + '<tr><th>Почта</th>'+q(c.email)+'</tr>'
+    + '<tr><th>Сайт</th><td><a href="'+c.site+'" target="_blank" rel="noopener" style="color:var(--primary)">'+c.siteLabel+'</a></td></tr>'
+    + '</tbody></table></div>';
+}
+
+/* ---------- tile ---------- */
+function card(c){
+  const a=document.createElement("button");
+  a.className="card"; a.type="button";
+  a.setAttribute("aria-haspopup","dialog");
+  a.setAttribute("aria-label", c.name+" — открыть карточку");
+  const money = c.price100
+    ? '<div class="money">≈ '+mln(c.price100)+' млн ₴<small>за дом 100 м² · ≈ '+fmtUsd(c)+'</small></div>'
+    : '<div class="money ask">Цена по запросу<small>компания не публикует прайс</small></div>';
+  a.innerHTML = media(c.id, 0, "tile", "Дом компании "+c.name+" с её сайта",
+                      {eager: c.n <= 4, priority: c.n === 1})
+    + '<div class="pad"><span class="tag">'+c.tech+'</span>'
+    + '<h3>'+c.name+'</h3><div class="city">'+c.region+'</div>'
+    + money
+    + '<span class="more">Смотреть <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></span></div>';
+  a.onclick=()=>openModal(c,a);
+  return a;
+}
+
+/* ---------- modal ---------- */
+const scrim=document.getElementById("scrim");
+const mcontent=document.getElementById("mcontent");
+const mclose=document.getElementById("mclose");
+let lastTrigger=null;
+
+function blk(k,v){ return v ? '<div class="blk"><div class="k">'+k+'</div><div class="v">'+v+'</div></div>' : ''; }
+
+function openModal(c,trigger){
+  lastTrigger=trigger||null;
+  const ext='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg>';
+  const src=SOURCES[c.id]||[];
+  const shots=[0,1].map(i=>{
+    const t=src[i];
+    const btn = t ? '<a class="srcbtn" href="'+t.u+'" target="_blank" rel="noopener" aria-label="'+t.l+' — '+c.name+', фото '+(i+1)+'">'+t.l+ext+'</a>' : '';
+    return '<figure>'+media(c.id, i, "full", "Дом компании "+c.name+", фото "+(i+1), {eager:true, priority:i===0})+btn+'</figure>';
+  }).join("");
+  const priceFact = c.price100
+    ? '<div class="v">≈ '+mln(c.price100)+' млн ₴</div><div class="s">за дом 100 м² под ключ · ≈ '+fmtUsd(c)+'</div>'
+    : '<div class="v sm">Цена по запросу</div><div class="s">компания не публикует прайс</div>';
+  mcontent.innerHTML =
+      '<div class="mshots">'+shots+'</div>'
+    + '<div class="mbody">'
+    +   '<div class="mtop"><span class="tag">'+c.tech+'</span><span class="city">'+c.loc+'</span></div>'
+    +   '<h2 id="mtitle">'+c.name+'</h2>'
+    +   (c.name2 ? '<div class="msub">'+c.name2+'</div>' : '')
+    +   '<div class="facts">'
+    +     '<div class="fact"><div class="k">Цена</div>'+priceFact+'</div>'
+    +     '<div class="fact"><div class="k">Срок производства</div><div class="v sm">'+(c.term||"Уточнить")+'</div></div>'
+    +     '<div class="fact"><div class="k">Мощность</div><div class="v sm">'+c.capNote+'</div></div>'
+    +   '</div>'
+    +   interiorBlock(c)
+    +   checkTable(c)
+    +   priceChart(c)
+    +   econTable(c)
+    +   termChart(c)
+    +   '<div class="mdetails">'
+    +     (c.caveat ? '<div class="note">'+c.caveat+'</div>' : '')
+    +     blk("Что это за компания", c.comment)
+    +     blk("Спросить на звонке", c.ask)
+    +   '</div>'
+    +   specTable(c)
+    +   '<div class="mfoot"><a class="btn btn-primary" href="'+c.site+'" target="_blank" rel="noopener">Открыть сайт '+c.siteLabel+'</a>'
+    +     '<button class="btn btn-ghost" type="button" onclick="closeModal()">Закрыть</button></div>'
+    + '</div>';
+  const track=mcontent.querySelector(".ctrack");
+  if(track){
+    let idx=0;
+    const n=track.children.length;
+    const perView=()=>{
+      const w=track.children[0] ? track.children[0].offsetWidth : 1;
+      return Math.max(1, Math.round(track.clientWidth/(w+12)));
+    };
+    const go=d=>{
+      const pv=perView();
+      idx=Math.max(0, Math.min(idx+d*pv, n-pv));
+      const keep=scrim.scrollTop;
+      track.children[idx].scrollIntoView({inline:"start",block:"nearest"});
+      scrim.scrollTop=keep;
+    };
+    const prev=mcontent.querySelector(".cnav.prev"), next=mcontent.querySelector(".cnav.next");
+    prev.onclick=()=>go(-1); next.onclick=()=>go(1);
+    requestAnimationFrame(()=>{
+      const overflow = track.scrollWidth > track.clientWidth + 4;
+      prev.style.display = next.style.display = overflow ? "" : "none";
+    });
+    track.addEventListener("scroll",()=>{
+      const w=track.children[0] ? track.children[0].offsetWidth+12 : 1;
+      idx=Math.round(track.scrollLeft/w);
+    },{passive:true});
+  }
+  scrim.hidden=false;
+  document.body.style.overflow="hidden";
+  scrim.scrollTop=0;
+  mclose.focus();
+}
+function closeModal(){
+  scrim.hidden=true;
+  document.body.style.overflow="";
+  if(lastTrigger) lastTrigger.focus();
+}
+mclose.onclick=closeModal;
+scrim.onclick=e=>{ if(e.target===scrim) closeModal(); };
+document.addEventListener("keydown",e=>{
+  if(scrim.hidden) return;
+  if(e.key==="Escape"){ closeModal(); return; }
+  if(e.key==="Tab"){
+    const f=scrim.querySelectorAll('button, a[href]');
+    if(!f.length) return;
+    const first=f[0], last=f[f.length-1];
+    if(e.shiftKey && document.activeElement===first){ e.preventDefault(); last.focus(); }
+    else if(!e.shiftKey && document.activeElement===last){ e.preventDefault(); first.focus(); }
+  }
+});
+
+function render(){
+  const list = DATA.filter(c=>!active || c.tech===active).sort((a,b)=>a.n-b.n);
+  const g=document.getElementById("grid"); g.innerHTML="";
+  list.forEach(c=>g.appendChild(card(c)));
+  counter.textContent = list.length===16 ? "16 компаний" : "Показано "+list.length+" из 16";
+  const tb=document.getElementById("tbody"); tb.innerHTML="";
+  [...DATA].sort((a,b)=>{
+    if(a.price100==null && b.price100==null) return a.name.localeCompare(b.name,"ru");
+    if(a.price100==null) return 1; if(b.price100==null) return -1;
+    return a.price100-b.price100;
+  }).forEach(c=>{
+    const tr=el("tr");
+    tr.appendChild(el("td",null,'<span class="tname">'+c.name+'</span>'));
+    tr.appendChild(el("td",null,c.tech));
+    tr.appendChild(el("td",null, c.price100
+      ? '<span class="tprice">≈ '+mln(c.price100)+' млн ₴</span>'
+      : '<span class="tmiss">по запросу</span>'));
+    tr.appendChild(el("td",null,c.term||'<span class="tmiss">уточнить</span>'));
+    tr.appendChild(el("td",null,'<a href="'+c.site+'" target="_blank" rel="noopener">'+c.siteLabel+'</a>'));
+    tb.appendChild(tr);
+  });
+}
+render();
+</script>
+<script type="application/json" id="d-rest">{"nordihouse": ["nordihouse_1"], "kievkarkas": ["kievkarkas_1"], "norvil": ["norvil_1"], "moduldom": ["moduldom_1"], "unitfab": ["unitfab_1"], "bauenhaus": ["bauenhaus_1"], "blockmodul": ["blockmodul_1"], "lighthouse": ["lighthouse_1"], "ukrpanel": ["ukrpanel_1"], "sippro": ["sippro_1"], "paneco": ["paneco_1"], "servus": ["servus_1"], "sevenci": ["sevenci_1"], "cltrezult": ["cltrezult_1"], "kbkkharkov": ["kbkkharkov_1"], "koleo": ["koleo_1"]}</script>
+<script type="application/json" id="d-int">{"cltrezult": ["int_cltrezult_0", "int_cltrezult_1"], "unitfab": ["int_unitfab_0", "int_unitfab_1", "int_unitfab_2", "int_unitfab_3", "int_unitfab_4", "int_unitfab_5", "int_unitfab_6", "int_unitfab_7"]}</script>
+
+</body>
+</html>
